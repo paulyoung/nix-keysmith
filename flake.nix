@@ -7,7 +7,7 @@
   outputs = { self, nixpkgs, flake-utils }:
     let
       supportedSystems = {
-        # "aarch64-darwin" = "darwin-arm64";
+        "aarch64-darwin" = "darwin-arm64";
         "x86_64-darwin" = "darwin-amd64";
       };
     in
@@ -25,6 +25,11 @@
                 if builtins.hasAttr options.system supportedSystems
                 then supportedSystems.${options.system}
                 else error ("unsupported system: " + options.system);
+
+              tarSha256 =
+                if builtins.hasAttr options.system options.tarSha256
+                then options.tarSha256.${options.system}
+                else error ("tarSha256 not provided for system: " + options.system);
 
               url = "https://github.com/dfinity/keysmith/releases/download/${options.release}";
 
@@ -48,7 +53,7 @@
               pkgs.stdenv.mkDerivation {
                 name = "keysmith-${options.release}-${systemName}";
                 src = pkgs.fetchzip {
-                  sha256 = options.tarSha256;
+                  sha256 = tarSha256;
                   url = "${url}/${tar}";
                 };
                 nativeBuildInputs = [
@@ -70,17 +75,14 @@
               inherit system;
               release = "v1.6.2";
 
-              tarSha256 = "sha256-/Cdgtrn2w3Y/v2Kekk4gJV7io+ghWkD+xv3JTE6vkOw=";
-              # tarSha256 = pkgs.lib.fakeSha256;
-
-              # keySha256 = pkgs.lib.fakeSha256;
               keySha256 = "sha256-DXNFhaDDU3R7AqzBtVuRQGZJYM72LQNA+mZt4zrC6vU=";
-
-              # sigSha256 = pkgs.lib.fakeSha256;
               sigSha256 = "sha256-AFNOPvDsInCqmXFCp2q/yz5xdiEuZQW+TtrxxyFgFL8";
-
-              # sumSha256 = pkgs.lib.fakeSha256;
               sumSha256 = "sha256-4atZkXcL92OgdK4NvGw3UL+FaXDbvDvygCWolyE3GvU=";
+
+              tarSha256 = {
+                "aarch64-darwin" = "sha256-+3zowLogWUuw8voeJ/PLIgEVeWthnw5VRmYH5puFOGU=";
+                "x86_64-darwin" = "sha256-/Cdgtrn2w3Y/v2Kekk4gJV7io+ghWkD+xv3JTE6vkOw=";
+              };
             };
 
             # `nix build`
