@@ -70,8 +70,8 @@
               inherit system;
               release = "v1.6.2";
 
-              # sha256 = pkgs.lib.fakeSha256;
               tarSha256 = "sha256-/Cdgtrn2w3Y/v2Kekk4gJV7io+ghWkD+xv3JTE6vkOw=";
+              # tarSha256 = pkgs.lib.fakeSha256;
 
               # keySha256 = pkgs.lib.fakeSha256;
               keySha256 = "sha256-DXNFhaDDU3R7AqzBtVuRQGZJYM72LQNA+mZt4zrC6vU=";
@@ -86,15 +86,18 @@
             # `nix build`
             defaultPackage = packages.keysmith;
 
-            apps.keysmith = packages.keysmith;
+            apps.keysmith = flake-utils.lib.mkApp {
+              name = "keysmith";
+              drv = packages.keysmith;
+            };
 
             # `nix run`
-            defaultApp = packages.keysmith;
+            defaultApp = apps.keysmith;
 
             # `nix develop`
             devShell = pkgs.mkShell {
               buildInputs = [
-                apps.keysmith
+                packages.keysmith
               ];
             };
           }
