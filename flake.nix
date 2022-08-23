@@ -7,8 +7,8 @@
   outputs = { self, nixpkgs, flake-utils }:
     let
       supportedSystems = {
-        "aarch64-darwin" = "darwin-arm64";
-        "x86_64-darwin" = "darwin-amd64";
+        "${flake-utils.lib.system.aarch64-darwin}" = "darwin-arm64";
+        "${flake-utils.lib.system.x86_64-darwin}" = "darwin-amd64";
       };
     in
       flake-utils.lib.eachSystem (builtins.attrNames supportedSystems) (
@@ -80,8 +80,8 @@
               sumSha256 = "sha256-4atZkXcL92OgdK4NvGw3UL+FaXDbvDvygCWolyE3GvU=";
 
               tarSha256 = {
-                "aarch64-darwin" = "sha256-+3zowLogWUuw8voeJ/PLIgEVeWthnw5VRmYH5puFOGU=";
-                "x86_64-darwin" = "sha256-/Cdgtrn2w3Y/v2Kekk4gJV7io+ghWkD+xv3JTE6vkOw=";
+                "${flake-utils.lib.system.aarch64-darwin}" = "sha256-+3zowLogWUuw8voeJ/PLIgEVeWthnw5VRmYH5puFOGU=";
+                "${flake-utils.lib.system.x86_64-darwin}" = "sha256-/Cdgtrn2w3Y/v2Kekk4gJV7io+ghWkD+xv3JTE6vkOw=";
               };
             };
 
